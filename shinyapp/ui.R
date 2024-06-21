@@ -30,8 +30,12 @@ body <- dashboardBody(
     tabItem(tabName = "home",
             
             # -- standard text
-            h2("Home"),
-            p("This is a template app."))
+            h2("Etape:", textOutput("stage_title")),
+            
+            uiOutput("stage_actions"),
+            
+            textOutput("data_size"), br(),
+            tableOutput("content"))
     
   ) # tabItems
 ) # dashboardBody

@@ -20,6 +20,7 @@ cat("-- Declare global parameters \n")
 
 # -- Declare path
 path <- list(script = "./R",
+             resource = "./src",
              data = "../data")
 
 
