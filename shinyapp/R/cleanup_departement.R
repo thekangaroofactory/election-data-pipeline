@@ -2,6 +2,12 @@
 
 cleanup_departement <- function(data, drom_mapping, electoral_mapping){
   
+  cat("[cleanup_departement] \n")
+  
+  # -- check if colnames exists
+  expected_cols <- c("code_departement", "nom_departement")
+  check_columns(data, expected_cols)
+  
   # -- cleanup DROM/COM numbers
   data <- check_drom_code(data, colname = "code_departement", drom_mapping)
   

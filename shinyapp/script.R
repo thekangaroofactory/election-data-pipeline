@@ -1,6 +1,23 @@
 
 
 # -------------------------------------
+# Notes
+# 
+# - on garde les noms de commune car ils ne sont pas fiables dans la durée donc difficile
+# de maintenir un mapping dans ce but.
+
+
+
+# ******************************************************************************
+# 
+# Créer un module dédié pour la mise à jour du mapping électoral
+# - vérifier les noms des communes vs code_commune
+# - prévoir un formulaire d'ajout de nouvelles communes (résultat API + champs manuels circo & canton)
+# 
+# ******************************************************************************
+
+
+# -------------------------------------
 # Parameters
 # -------------------------------------
 
@@ -40,8 +57,8 @@ colname_to_skip <- readRDS(file = file.path(path$resource, "colname_to_skip.rds"
 drom_mapping <- readRDS(file = file.path(path$resource, "drom_mapping.rds"))
 
 # *****************************************************************************************************************
-electoral_mapping <- readr::read_delim("shinyapp/src/correspondance_circo_legislatives_2017.csv", 
-                                       delim = ";", escape_double = FALSE, trim_ws = TRUE)
+electoral_mapping <- readr::read_delim("shinyapp/src/electoral_mapping.csv", 
+                                       delim = ",", escape_double = FALSE, trim_ws = TRUE)
 # *****************************************************************************************************************
 
 
@@ -137,17 +154,16 @@ cols_candidate <- dm_candidate[dm_candidate$type != "NULL", ]$name
 # -- rename columns before candidate (to fit with output data model)
 colnames(dataset)[colnames(dataset) %in% cols_before_candidate] <- rename_cols(cols_before_candidate, output_dm, colname_mapping)
 
-# -- cleanup departement
+# -- cleanup departement & drop nom_departement
 dataset <- cleanup_departement(dataset, drom_mapping, electoral_mapping)
+dataset$'nom_departement' <- NULL
+
+# -- cleanup commune
+# Note: nom_commune is kept since it's hard to keep an up to date mapping with code_commune
+dataset <- cleanup_commune(dataset, electoral_mapping)
 
 
 # ********************************************************
-# 
-# mapping code <> nom département
-# check si c'est ok et drop la colonne nom departement
-# 
-# mapping code <> nom commune
-# check si c'est ok et drop la colonne nom commune
 # 
 # Ajouter le code_election, puis
 # 
