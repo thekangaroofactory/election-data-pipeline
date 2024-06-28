@@ -18,7 +18,8 @@ sidebar <- dashboardSidebar(
   
   # -- static section
   sidebarMenu(
-    menuItem("Home", tabName = "home", icon = icon("home"), selected = TRUE)))
+    menuItem("Dataset", tabName = "dataset", icon = icon("home"), selected = TRUE),
+    menuItem("Header", tabName = "header", icon = icon("home"))))
 
 
 # -- Define the body
@@ -26,16 +27,43 @@ cat("-- Define body \n")
 body <- dashboardBody(
   tabItems(
     
-    # -- Home
-    tabItem(tabName = "home",
+    # -- dataset
+    tabItem(tabName = "dataset",
             
-            # -- standard text
-            h2("Etape:", textOutput("stage_title")),
+            # -- title
+            h2("Sélection du fichier"),
             
-            uiOutput("stage_actions"),
+            # -- inputs
+            election_type_UI("data"),
+            file_options_UI("data"),
+            file_input_UI("data"),
             
-            textOutput("data_size"), br(),
-            tableOutput("content"))
+            # -- preview
+            content_preview_UI("data")),
+    
+    
+    # -- header
+    tabItem(tabName = "header",
+            
+            # -- title
+            h2("Préparation"),
+            
+            # -- section.1
+            raw_colnames_UI("dm"),
+            
+            # -- section.2
+            nb_candidate_UI("dm"),
+            
+            # -- section.3
+            dm_before_candidate_UI("dm"),
+            
+            # -- section.4
+            dm_candidate_UI("dm"),
+            
+            # -- section.5
+            dataset_preview_UI("dm")
+    )
+    
     
   ) # tabItems
 ) # dashboardBody

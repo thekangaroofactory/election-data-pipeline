@@ -24,6 +24,11 @@
 # -- file
 datapath <- "D:/Downloads/resultats-definitifs-par-bureau-de-vote.csv"
 
+# -- election
+election_year <- "2024"
+election_type <- "EUR"
+election_turn <- "T1"
+
 # -- options
 sep = ";"
 fileEncoding = "UTF-8"
@@ -152,37 +157,53 @@ cols_candidate <- dm_candidate[dm_candidate$type != "NULL", ]$name
 # the general result columns
 
 # -- rename columns before candidate (to fit with output data model)
+# update cols_before_candidate
 colnames(dataset)[colnames(dataset) %in% cols_before_candidate] <- rename_cols(cols_before_candidate, output_dm, colname_mapping)
+cols_before_candidate <- colnames(dataset)[1:length(cols_before_candidate)]
+
 
 # -- cleanup departement & drop nom_departement
-dataset <- cleanup_departement(dataset, drom_mapping, electoral_mapping)
-dataset$'nom_departement' <- NULL
+if(all(c("code_departement", "nom_departement") %in% colnames(dataset))){
+  
+  dataset <- cleanup_departement(dataset, drom_mapping, electoral_mapping)
+  dataset$'nom_departement' <- NULL
+  cols_before_candidate <- cols_before_candidate[!cols_before_candidate %in% 'nom_departement']
+  
+}
 
 # -- cleanup commune
 # Note: nom_commune is kept since it's hard to keep an up to date mapping with code_commune
-dataset <- cleanup_commune(dataset, electoral_mapping)
+if(all(c("code_commune", "nom_commune") %in% colnames(dataset)))
+  dataset <- cleanup_commune(dataset, electoral_mapping)
 
 
-# ********************************************************
-# 
-# Ajouter le code_election, puis
-# 
-# extraire le résultat général (inscrits, participation, ...) avant de faire le flatten
-# en conservant les cols code dep, commune, bv
-#
-# construire la liste des candidats
-# panneau, nuance, nom liste abrg, nom liste étendue
-#
-# ********************************************************
-  
+# -------------------------------------
+# Code election
+# -------------------------------------
+
+# -- add code election (to the left...)
+dataset <- cbind(data.frame(code_election = rep(paste(election_year, election_type, election_turn, sep = "_"), nrow(dataset))), dataset)
+cols_before_candidate <- c("code_election", cols_before_candidate)
+
+
+# -------------------------------------
+# Extract general & candidate results
+# -------------------------------------
+
+# -- subset data
+general_result <- dataset[cols_before_candidate]
+candidate_result <- dataset[!colnames(dataset) %in% c("nom_commune", "inscrits", "votants", "abstentions", "exprimes", "blancs", "nuls")]
+
+# -- cleanup
+rm(dataset)
+
+
 # -------------------------------------
 # Flatten the data
 # -------------------------------------
 
-
-
-foo <- flatten_dataset(dataset, 
-                       cols_before = cols_before_candidate,
+foo <- flatten_dataset(candidate_result,
+                       cols_before = c("code_election", "code_departement", "code_commune", "code_bureau_vote"),
                        cols_candidate = cols_candidate,
                        nb_cand = nb_candidate)
 
