@@ -26,6 +26,9 @@ data_manager_Server <- function(id, r, path) {
     r$datapath <- reactive(input$file_input$datapath)
     r$file_separator <- reactive(input$file_separator)
     r$file_encoding <- reactive(input$file_encoding)
+    r$election_year <- reactive(input$election_year)
+    r$election_type <- reactive(input$election_type)
+    r$election_turn <- reactive(input$election_turn)
     
     # -- read
     r$header <- eventReactive(input$file_input, {

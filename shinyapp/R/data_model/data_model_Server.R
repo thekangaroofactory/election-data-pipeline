@@ -158,6 +158,8 @@ data_model_Server <- function(id, r, path) {
       
       # -- store
       r$dataset <- dataset
+      r$cols_before_candidate <- cols_before_candidate
+      r$cols_candidate <- cols_candidate
       
     })
     
