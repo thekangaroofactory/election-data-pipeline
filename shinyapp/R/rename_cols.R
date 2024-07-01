@@ -12,9 +12,6 @@ rename_cols <- function(cols, dm, mapping){
   # -- check & replace names that fits with an existing entry from the mapping
   cols[cols %in% mapping$keyword] <- mapping$name[match(cols[cols %in% mapping$keyword], mapping$keyword)]
 
-  # -- check remaining names
-  str(cols[!cols %in% dm$name])
-    
   # -- return
   cols
   
