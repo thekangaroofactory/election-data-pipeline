@@ -26,6 +26,7 @@ cleanup_commune <- function(data, electoral_mapping){
   
   # -- identify rows to fix (with length different from 5 digits)
   rows_to_fix <- nchar(unique(data[data$code_departement %in% sequence, ]$code_commune)) != 5
+  cat("-- Check general case \n")
 
   
   if(any(rows_to_fix)){
@@ -52,6 +53,7 @@ cleanup_commune <- function(data, electoral_mapping){
   
   # -- identify rows to fix (with length different from 5 digits)
   rows_to_fix <- nchar(unique(data[data$code_departement %in% sequence, ]$code_commune)) != 5
+  cat("-- Check Guadeloupe, Martinique, Guyane, La Réunion, Saint-Pierre-et-Miquelon, Mayotte \n")
   
   
   if(any(rows_to_fix)){
@@ -76,6 +78,7 @@ cleanup_commune <- function(data, electoral_mapping){
   
   # -- identify rows to fix (with length different from 5 digits)
   rows_to_fix <- nchar(unique(data[data$code_departement %in% sequence, ]$code_commune)) != 5
+  cat("-- Check Wallis-et-Futuna \n")
   
   
   if(any(rows_to_fix)){
@@ -103,6 +106,7 @@ cleanup_commune <- function(data, electoral_mapping){
   
   # -- identify rows to fix (with length different from 5 digits)
   rows_to_fix <- nchar(unique(data[data$code_departement %in% sequence, ]$code_commune)) != 5
+  cat("-- Check Polynésie française \n")
   
   
   if(any(rows_to_fix)){
@@ -128,6 +132,7 @@ cleanup_commune <- function(data, electoral_mapping){
   
   # -- identify rows to fix (with length different from 5 digits)
   rows_to_fix <- nchar(unique(data[data$code_departement %in% sequence, ]$code_commune)) != 5
+  cat("-- Check Saint-Barthélemy, Saint-Martin \n")
   
   
   if(any(rows_to_fix)){
@@ -153,6 +158,7 @@ cleanup_commune <- function(data, electoral_mapping){
   
   # -- identify rows to fix (with length different from 5 digits)
   rows_to_fix <- nchar(unique(data[data$code_departement %in% sequence, ]$code_commune)) != 5
+  cat("-- Check Français établis hors de France \n")
   
   
   if(any(rows_to_fix)){
@@ -172,6 +178,8 @@ cleanup_commune <- function(data, electoral_mapping){
   
   # -- identify rows to fix (with code_commune not in electoral_mapping)
   rows_to_fix <- !data$code_commune %in% electoral_mapping$code_commune
+  cat("-- Check code_commune in electoral_mapping \n")
+  
   
   if(any(rows_to_fix)){
     
@@ -180,6 +188,8 @@ cleanup_commune <- function(data, electoral_mapping){
     stop("Fix corresponding rows using suggest_code_commune(DEBUG_rows_to_fix, electoral_mapping) & relaunch script")
     
   }
+  
+  cat("All checks done. \n")
   
   # -- return
   data
