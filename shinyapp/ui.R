@@ -19,7 +19,8 @@ sidebar <- dashboardSidebar(
   # -- static section
   sidebarMenu(
     menuItem("Dataset", tabName = "dataset", icon = icon("home"), selected = TRUE),
-    menuItem("Header", tabName = "header", icon = icon("home"))))
+    menuItem("Data model", tabName = "header", icon = icon("home")),
+    menuItem("Résultat général", tabName = "general", icon = icon("home"))))
 
 
 # -- Define the body
@@ -61,7 +62,27 @@ body <- dashboardBody(
             dm_candidate_UI("dm"),
             
             # -- section.5
-            dataset_preview_UI("dm")
+            dataset_preview_UI("dm")),
+    
+    
+    # -- general
+    tabItem(tabName = "general",
+     
+            # -- title
+            h2("Résultat Général"),
+            
+            # -- section.1
+            rename_colnames_UI("general"),
+            
+            # -- section.2
+            departement_UI("general"),
+            
+            # -- section.3
+            commune_UI("general"),
+            
+            # -- section.4
+            code_election_UI("general")
+                   
     )
     
     
