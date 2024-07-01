@@ -123,47 +123,43 @@ data_model_Server <- function(id, r, path) {
     
     observeEvent(input$validate_section_4, {
       
-      cat(module, "Read the data \n")
+      cat(module, "Prepare to read the data \n")
       
       # -- get values
-      dm_before_candidate <- r$dm_before_candidate()
-      # cat("----------\n")
-      # dm_candidate <- r$dm_candidate()
-      # cat("----------\n")
-      # nb_candidate <- r$nb_candidate
-      # 
-      # cat("----------\n")
-      # 
-      # # -- prepare colClasses (before candidate)
-      # colClasses_before_candidate <- dm_before_candidate$type
-      # 
-      # # -- prepare colClasses (candidate)
-      # colClasses_candidate <- dm_candidate$type
-      # 
-      # # -- merge colClasses
-      # colClasses <- c(colClasses_before_candidate, rep(colClasses_candidate, nb_candidate))
-      # 
-      # cat("----------\n")
-      # 
-      # # -- read file
-      # dataset <- read.csv(r$datapath(), 
-      #                     header = TRUE, 
-      #                     sep = r$file_separator(), 
-      #                     fileEncoding = r$file_encoding(),
-      #                     colClasses = colClasses)
-      # 
-      # # -- update cols (since some of them are not loaded)
-      # cols_before_candidate <- dm_before_candidate[dm_before_candidate$type != "NULL", ]$name
-      # cols_candidate <- dm_candidate[dm_candidate$type != "NULL", ]$name
-      # 
-      # # -- output
-      # output$dataset_preview <- DT::renderDT(head(dataset, n = 5))
+      dm_before_candidate <- r$dm_before_candidate
+      dm_candidate <- r$dm_candidate
+      nb_candidate <- r$nb_candidate()
+        
+      # -- prepare colClasses (before candidate)
+      colClasses_before_candidate <- dm_before_candidate$type
+
+      # -- prepare colClasses (candidate)
+      colClasses_candidate <- dm_candidate$type
+
+      # -- merge colClasses
+      colClasses <- c(colClasses_before_candidate, rep(colClasses_candidate, nb_candidate))
+
+      # -- read file
+      cat(module, "Reading the data... \n")
+      dataset <- read.csv(r$datapath(),
+                          header = TRUE,
+                          sep = r$file_separator(),
+                          fileEncoding = r$file_encoding(),
+                          colClasses = colClasses)
+      cat(module, "-- Done. \n")
+
+      
+      # -- update cols (since some of them are not loaded)
+      cols_before_candidate <- dm_before_candidate[dm_before_candidate$type != "NULL", ]$name
+      cols_candidate <- dm_candidate[dm_candidate$type != "NULL", ]$name
+
+      # -- output
+      output$dataset_preview <- DT::renderDT(head(dataset, n = 5))
       
       # -- store
-      
+      r$dataset <- dataset
       
     })
-    
     
     
   }) # -- end moduleServer
